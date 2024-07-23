@@ -20,10 +20,18 @@ class ContatoController extends Controller
         $request->validate([
             'nome' => 'required|min:3',
             'telefone' => 'required',
-            'email' => 'required|email',
-            'motivo' => 'required',
+            'email' => 'required|email|unique:site_contatos',
+            'motivo_contatos_id' => 'required',
             'mensagem' => 'required|max:200',
+        ],[
+            'required'=> 'O campo :attribute deve ser preenchido.',
+
+            'nome.min'=> 'O campo NOME precisa ter no minimo 3 caracteres.',
+            'email.email'=> 'Email inválido.',
+            'email.unique'=> 'E-mail em uso.',
+            'mensagem.max'=> 'Quantidade de caracteres excedida. Max:200',
         ]);
-        // dd($request);
+        SiteContato::create($request->all());
+        return redirect()->route('site.index');
     }
 }
