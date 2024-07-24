@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\FornecedorController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PrincipalController;
 use App\Http\Controllers\SobreNosController;
 use App\Http\Controllers\TesteController;
@@ -16,9 +17,8 @@ Route::get('/contato/{nome}/{categoria}', function (string $nome, string $catego
     echo 'Estamos aqui ' . $nome . ' ' . $categoria;
 })->where('nome', '[A-Za-z]+')->where('categoria', '[A-Za-z]+');
 
-Route::get('/login', function () {
-    return 'Login';
-});
+Route::get('/login/{erro?}', [LoginController::class, 'index'])->name('site.login');
+Route::post('/login', [LoginController::class, 'autenticar'])->name('site.login');
 
 Route::middleware('autenticacao')->prefix('/app')->group(function () {
     Route::get('/clientes', function () {return 'Clientes';})->name('app.clientes');
@@ -29,7 +29,7 @@ Route::middleware('autenticacao')->prefix('/app')->group(function () {
 Route::get('/teste/{p1}/{p2}', [TesteController::class, 'teste'])->name('teste');
 
 Route::fallback(function () {
-    echo 'A rota acessada não existe, <a href="' . route('site.principal') . '">Principal</a> para ir patra a página principal';
+    echo 'A rota acessada não existe, <a href="' . route('site.index') . '">Principal</a> para ir patra a página principal';
 });
 
 
